@@ -1,3 +1,4 @@
+// Archivo: src/main/java/com/programa_costos/service/ProveedorService.java
 package main.java.com.programa_costos.service;
 
 import main.java.com.programa_costos.model.Proveedor;
@@ -6,16 +7,18 @@ import main.java.com.programa_costos.io.ExcelReader;
 import java.util.List;
 
 public class ProveedorService {
-
 	private List<Proveedor> proveedores;
+	private String resourcePath;
 
 	/**
-	 * Inicializa el servicio cargando proveedores desde un recurso Excel en el
-	 * classpath. El archivo debe encontrarse en
-	 * src/main/resources/Espumas_Ciegas.xlsx.
+	 * Inicializa el servicio cargando proveedores desde un recurso Excel. La ruta
+	 * se pasa dinámicamente.
+	 *
+	 * @param resourcePath Ruta al archivo Excel (p.ej. "Espumas_Ciegas.xlsx").
 	 */
-	public ProveedorService() {
-		this.proveedores = ExcelReader.leerProveedoresDesdeExcel("Espumas_Ciegas.xlsx");
+	public ProveedorService(String resourcePath) {
+		this.resourcePath = resourcePath;
+		this.proveedores = ExcelReader.leerProveedoresDesdeExcel(resourcePath);
 	}
 
 	public List<Proveedor> getProveedores() {
@@ -32,14 +35,5 @@ public class ProveedorService {
 
 	public void agregarProveedor(Proveedor proveedor) {
 		proveedores.add(proveedor);
-	}
-
-	/**
-	 * Método de prueba: carga y muestra por consola los proveedores leídos.
-	 */
-	public static void main(String[] args) {
-		ProveedorService service = new ProveedorService();
-		System.out.println("Proveedores cargados desde Excel:");
-		service.getProveedores().forEach(System.out::println);
 	}
 }

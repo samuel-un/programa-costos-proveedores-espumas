@@ -1,3 +1,4 @@
+// Archivo: src/main/java/com/programa_costos/main/MainApp.java
 package main.java.com.programa_costos.main;
 
 import main.java.com.programa_costos.model.Producto;
@@ -9,11 +10,19 @@ import java.util.List;
 
 public class MainApp {
 	public static void main(String[] args) {
-		// Producto de prueba
+		// Obtener ruta del Excel desde argumentos o usar valor por defecto
+		String excelPath = (args.length > 0) ? args[0] : "Espumas_Ciegas.xlsx";
+
+		// Mensaje de uso si no se proporciona ruta explícita
+		if (args.length == 0) {
+			System.out.println("No se proporcionó ruta de Excel, usando la de por defecto (src/main/resources): " + excelPath);
+		}
+
+		// Producto de prueba (podrías parametrizarlo también en el futuro)
 		Producto producto = new Producto(10.0, 20.0, 30.0, "ciego", "ecs");
 
-		// Cargar proveedores
-		ProveedorService proveedorService = new ProveedorService();
+		// Cargar proveedores dinámicamente
+		ProveedorService proveedorService = new ProveedorService(excelPath);
 		List<Proveedor> proveedores = proveedorService.getProveedores();
 
 		// Mostrar costos

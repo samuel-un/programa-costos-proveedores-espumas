@@ -6,26 +6,20 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.InputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ExcelReader {
 
 	/**
-	 * Lee una lista de proveedores desde un recurso Excel en el classpath. Se busca
-	 * la fila de encabezado que contenga "Nombre" (o "Proveedor") en la primera
-	 * celda, y se leen todas las filas posteriores interpretando la columna 0 como
-	 * nombre y 1 como precio.
+	 * Lee proveedores desde un recurso Excel de forma dinámica. Normaliza nombres
+	 * (trim, case-insensitive, colapsa espacios), filtra vacíos y conserva el
+	 * precio unitario más bajo por proveedor.
 	 *
-	 * @param resourcePath Ruta del recurso Excel en el classpath (por ejemplo,
-	 *                     "Espumas_Ciegas.xlsx").
-	 * @return Lista de proveedores.
-	 * @throws RuntimeException si no se encuentra el archivo o la fila de
-	 *                          encabezado.
+	 * @param resourcePath Ruta del recurso Excel en el classpath.
+	 * @return Lista de proveedores únicos con su precio mínimo.
 	 */
 	public static List<Proveedor> leerProveedoresDesdeExcel(String resourcePath) {
-		List<Proveedor> proveedores = new ArrayList<>();
-
+		Map<String, Proveedor> proveedorMap = new LinkedHashMap<>();
 		try (InputStream is = ExcelReader.class.getClassLoader().getResourceAsStream(resourcePath);
 				Workbook workbook = new XSSFWorkbook(is)) {
 
@@ -35,62 +29,67 @@ public class ExcelReader {
 
 			Sheet sheet = workbook.getSheetAt(0);
 			int headerRowIdx = -1;
-
-			// Buscar fila de encabezado
+			// Buscar encabezado que contenga 'Prov.' o 'Proveedor'
 			for (Row row : sheet) {
-				Cell primera = row.getCell(0);
-				if (primera != null && primera.getCellType() == CellType.STRING) {
-					String texto = primera.getStringCellValue().trim();
-					if (texto.equalsIgnoreCase("nombre") || texto.equalsIgnoreCase("proveedor")) {
-						headerRowIdx = row.getRowNum();
-						break;
+				for (Cell cell : row) {
+					if (cell.getCellType() == CellType.STRING) {
+						String txt = cell.getStringCellValue().trim();
+						if (txt.equalsIgnoreCase("Prov.") || txt.equalsIgnoreCase("Proveedor")) {
+							headerRowIdx = row.getRowNum();
+							break;
+						}
 					}
 				}
+				if (headerRowIdx >= 0)
+					break;
 			}
-
 			if (headerRowIdx < 0) {
-				throw new IllegalStateException("No se encontró la fila de encabezado con 'Nombre' o 'Proveedor'.");
+				throw new IllegalStateException("No se encontró la fila de encabezado con 'Prov.' o 'Proveedor'.");
 			}
-
-			// Leer filas posteriores a encabezado
+			// Mapear nombre de columna a índice
+			Row header = sheet.getRow(headerRowIdx);
+			Map<String, Integer> idxMap = new HashMap<>();
+			for (Cell cell : header) {
+				if (cell.getCellType() == CellType.STRING) {
+					idxMap.put(cell.getStringCellValue().trim(), cell.getColumnIndex());
+				}
+			}
+			// Validar que existan columnas necesarias
+			if (!idxMap.containsKey("Prov.") || !idxMap.containsKey("IMPORTE UD.")) {
+				throw new IllegalStateException("Falta columna 'Prov.' o 'IMPORTE UD.' en encabezado.");
+			}
+			int colProv = idxMap.get("Prov.");
+			int colPrecio = idxMap.get("IMPORTE UD.");
+			// Leer datos
 			for (int i = headerRowIdx + 1; i <= sheet.getLastRowNum(); i++) {
 				Row row = sheet.getRow(i);
 				if (row == null)
 					continue;
-
-				Cell celdaNombre = row.getCell(0);
-				Cell celdaPrecio = row.getCell(1);
-				if (celdaNombre == null || celdaPrecio == null)
+				Cell cellProv = row.getCell(colProv);
+				Cell cellPre = row.getCell(colPrecio);
+				if (cellProv == null || cellPre == null)
 					continue;
-
-				// Obtener nombre
-				String nombre;
-				if (celdaNombre.getCellType() == CellType.STRING) {
-					nombre = celdaNombre.getStringCellValue().trim();
-				} else {
-					nombre = celdaNombre.toString().trim();
+				String rawName = cellProv.toString().trim();
+				if (rawName.isEmpty())
+					continue; // sin nombre, ignorar
+				// Normalizar clave
+				String key = rawName.toLowerCase().replaceAll("\\s+", " ");
+				// Parsear precio
+				double precio;
+				try {
+					precio = Double.parseDouble(cellPre.toString().trim());
+				} catch (NumberFormatException e) {
+					continue; // valor inválido
 				}
-
-				// Obtener precio unitario
-				double precioUnitario;
-				if (celdaPrecio.getCellType() == CellType.NUMERIC) {
-					precioUnitario = celdaPrecio.getNumericCellValue();
-				} else {
-					try {
-						precioUnitario = Double.parseDouble(celdaPrecio.toString().trim());
-					} catch (NumberFormatException e) {
-						// Saltar filas con valores no numéricos
-						continue;
-					}
+				// Guardar o actualizar precio mínimo
+				Proveedor exist = proveedorMap.get(key);
+				if (exist == null || precio < exist.getPrecioUnitario()) {
+					proveedorMap.put(key, new Proveedor(rawName, precio));
 				}
-
-				proveedores.add(new Proveedor(nombre, precioUnitario));
 			}
-
 		} catch (IOException e) {
 			throw new RuntimeException("Error leyendo el archivo Excel: " + e.getMessage(), e);
 		}
-
-		return proveedores;
+		return new ArrayList<>(proveedorMap.values());
 	}
 }
