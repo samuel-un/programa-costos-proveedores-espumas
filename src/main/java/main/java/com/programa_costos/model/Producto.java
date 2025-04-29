@@ -1,71 +1,56 @@
 package main.java.com.programa_costos.model;
 
 public class Producto {
-	private float alto;
-	private float ancho;
 	private float largo;
-	private String sistema; // "ciego", "pasante" o "mecanizado"
-	private String tipoEspuma; // "ecs", "poliuretano", etc.
+	private float ancho;
+	private float grueso;
+	private String tipoEspuma;
+	private String denominacion;
 
 	// Constructor
-	public Producto(float alto, float ancho, float largo, String sistema, String tipoEspuma) {
-		this.alto = alto / 100;
-		this.ancho = ancho / 100;
-		this.largo = largo / 100;
-		this.sistema = sistema;
+	public Producto(float largo, float ancho, float grueso, String tipoEspuma, String denominacion) {
+		this.largo = largo;
+		this.ancho = ancho;
+		this.grueso = grueso;
 		this.tipoEspuma = tipoEspuma;
+		this.denominacion = denominacion;
 	}
 
-	// Getters y Setters
-	public float getAlto() {
-		return alto;
-	}
-
-	public void setAlto(float alto) {
-		this.alto = alto;
+	// Métodos getters
+	public float getLargo() {
+		return largo;
 	}
 
 	public float getAncho() {
 		return ancho;
 	}
 
-	public void setAncho(float ancho) {
-		this.ancho = ancho;
-	}
-
-	public float getLargo() {
-		return largo;
-	}
-
-	public void setLargo(float largo) {
-		this.largo = largo;
-	}
-
-	public String getSistema() {
-		return sistema;
-	}
-
-	public void setSistema(String sistema) {
-		this.sistema = sistema;
+	public float getGrueso() {
+		return grueso;
 	}
 
 	public String getTipoEspuma() {
 		return tipoEspuma;
 	}
 
-	public void setTipoEspuma(String tipoEspuma) {
-		this.tipoEspuma = tipoEspuma;
+	public String getDenominacion() {
+		return denominacion;
 	}
 
-	// Método de conveniencia: retorna el volumen (por ejemplo, en cm3)
+	// Método para calcular el volumen del producto
 	public float getVolumen() {
-		return alto * ancho * largo;
+		// Volumen = largo * ancho * grueso
+		return largo * ancho * grueso;
 	}
 
-	// toString() para facilitar la representación en String del objeto Producto
 	@Override
 	public String toString() {
-		return "Producto{" + "alto=" + alto + ", ancho=" + ancho + ", largo=" + largo + ", sistema='" + sistema + '\''
-				+ ", tipoEspuma='" + tipoEspuma + '\'' + ", volumen=" + getVolumen() + '}';
+		return "Producto{" +
+				"largo=" + largo +
+				", ancho=" + ancho +
+				", grueso=" + grueso +
+				", tipoEspuma='" + tipoEspuma + '\'' +
+				", denominacion='" + denominacion + '\'' +
+				'}';
 	}
 }

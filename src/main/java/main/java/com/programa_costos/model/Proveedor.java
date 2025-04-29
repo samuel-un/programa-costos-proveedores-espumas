@@ -1,47 +1,58 @@
 package main.java.com.programa_costos.model;
 
 public class Proveedor {
-    private String nombre;
-    private float precioUnitario;
-    private String tipoEspuma; // NUEVO
+	private String nombre;
+	private float precioUnitario;
+	private String tipoEspuma;
+	private float largo;
+	private float ancho;
+	private float grueso;
 
-    // Constructor actualizado con tipoEspuma
-    public Proveedor(String nombre, float precioUnitario, String tipoEspuma) {
-        this.nombre = nombre;
-        this.precioUnitario = precioUnitario;
-        this.tipoEspuma = tipoEspuma;
-    }
+	// Constructor
+	public Proveedor(String nombre, float precioUnitario, String tipoEspuma, float largo, float ancho, float grueso) {
+		this.nombre = nombre;
+		this.precioUnitario = precioUnitario;
+		this.tipoEspuma = tipoEspuma;
+		this.largo = largo;
+		this.ancho = ancho;
+		this.grueso = grueso;
+	}
 
-    // Getters y Setters
-    public String getNombre() {
-        return nombre;
-    }
+	// Getters
+	public String getNombre() {
+		return nombre;
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	public float getPrecioUnitario() {
+		return precioUnitario;
+	}
 
-    public float getPrecioUnitario() {
-        return precioUnitario;
-    }
+	public String getTipoEspuma() {
+		return tipoEspuma;
+	}
 
-    public void setPrecioUnitario(float precioUnitario) {
-        this.precioUnitario = precioUnitario;
-    }
+	public float getLargo() {
+		return largo;
+	}
 
-    public String getTipoEspuma() {
-        return tipoEspuma;
-    }
+	public float getAncho() {
+		return ancho;
+	}
 
-    public void setTipoEspuma(String tipoEspuma) {
-        this.tipoEspuma = tipoEspuma;
-    }
+	public float getGrueso() {
+		return grueso;
+	}
 
-    @Override
-    public String toString() {
-        return "Proveedor{" + "nombre='" + nombre + '\'' +
-                ", precioUnitario=" + precioUnitario +
-                ", tipoEspuma='" + tipoEspuma + '\'' +
-                '}';
-    }
+	// Setters (si es necesario)
+	public void setLargo(float largo) {
+		this.largo = largo;
+	}
+
+	public void setAncho(float ancho) {
+		this.ancho = ancho;
+	}
+
+	public void setGrueso(float grueso) {
+		this.grueso = grueso;
+	}
 }

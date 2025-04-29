@@ -7,39 +7,30 @@ import java.util.List;
 
 public class CostCalculator {
 
-	/**
-	 * Calcula el costo total de un producto para un proveedor específico.
-	 *
-	 * @param producto  El producto con dimensiones y tipo de espuma.
-	 * @param proveedor El proveedor con su precio unitario.
-	 * @return El costo total en base al volumen del producto.
-	 */
 	public static float calcularCostoTotal(Producto producto, Proveedor proveedor) {
 		float volumen = producto.getVolumen(); // En cm3
 		return volumen * proveedor.getPrecioUnitario();
 	}
 
-	/**
-	 * Devuelve el proveedor que ofrece el menor costo para un producto dado.
-	 *
-	 * @param producto    El producto para el que se busca el mejor proveedor.
-	 * @param proveedores Lista de proveedores a comparar.
-	 * @return El proveedor más económico.
-	 */
 	public static Proveedor encontrarProveedorMasEconomico(Producto producto, List<Proveedor> proveedores) {
+		return encontrarProveedorMasEconomico(proveedores);
+	}
+
+	// Método sobrecargado sin necesidad del producto
+	public static Proveedor encontrarProveedorMasEconomico(List<Proveedor> proveedores) {
 		if (proveedores == null || proveedores.isEmpty()) {
 			throw new IllegalArgumentException("La lista de proveedores no puede estar vacía.");
 		}
 
 		Proveedor mejorProveedor = proveedores.get(0);
-		float menorCosto = calcularCostoTotal(producto, mejorProveedor);
+		float menorPrecio = mejorProveedor.getPrecioUnitario();
 
 		for (int i = 1; i < proveedores.size(); i++) {
 			Proveedor proveedor = proveedores.get(i);
-			float costo = calcularCostoTotal(producto, proveedor);
+			float precio = proveedor.getPrecioUnitario();
 
-			if (costo < menorCosto) {
-				menorCosto = costo;
+			if (precio < menorPrecio) {
+				menorPrecio = precio;
 				mejorProveedor = proveedor;
 			}
 		}
