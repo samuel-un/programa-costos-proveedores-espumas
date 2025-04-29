@@ -16,7 +16,7 @@ public class MainApp {
 					"No se proporcionó ruta de Excel, usando la de por defecto (src/main/resources): " + excelPath + "\n");
 		}
 
-		Producto producto = new Producto(10.0, 10.0, 10.0, "ciego", "polietileno");
+		Producto producto = new Producto(30, 20, 2, "ciego", "poliuretano");
 
 		ProveedorService proveedorService = new ProveedorService(excelPath);
 
@@ -30,14 +30,14 @@ public class MainApp {
 
 		System.out.println("Costos para el producto: " + producto);
 		for (Proveedor proveedor : proveedoresFiltrados) {
-			double costo = CostCalculator.calcularCostoTotal(producto, proveedor);
-			System.out.printf(" - %s (Precio unitario: %.2f): Costo total del volumen = %.2f%n",
+			float costo = CostCalculator.calcularCostoTotal(producto, proveedor);
+			System.out.printf(" - %s (Precio unitario: %.6f): Costo total del volumen = %.6f%n",
 					proveedor.getNombre(), proveedor.getPrecioUnitario(), costo);
 		}
 
 		Proveedor mejor = CostCalculator.encontrarProveedorMasEconomico(producto, proveedoresFiltrados);
 		System.out.println("\nProveedor más económico:");
-		System.out.printf(" - %s (Precio unitario: %.2f): Costo total del volumen = %.2f%n",
+		System.out.printf(" - %s (Precio unitario: %.6f): Costo total del volumen = %.6f%n",
 				mejor.getNombre(), mejor.getPrecioUnitario(), CostCalculator.calcularCostoTotal(producto, mejor));
 	}
 }

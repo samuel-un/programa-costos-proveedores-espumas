@@ -14,8 +14,8 @@ public class CostCalculator {
 	 * @param proveedor El proveedor con su precio unitario.
 	 * @return El costo total en base al volumen del producto.
 	 */
-	public static double calcularCostoTotal(Producto producto, Proveedor proveedor) {
-		double volumen = producto.getVolumen(); // En cm3
+	public static float calcularCostoTotal(Producto producto, Proveedor proveedor) {
+		float volumen = producto.getVolumen(); // En cm3
 		return volumen * proveedor.getPrecioUnitario();
 	}
 
@@ -32,11 +32,11 @@ public class CostCalculator {
 		}
 
 		Proveedor mejorProveedor = proveedores.get(0);
-		double menorCosto = calcularCostoTotal(producto, mejorProveedor);
+		float menorCosto = calcularCostoTotal(producto, mejorProveedor);
 
 		for (int i = 1; i < proveedores.size(); i++) {
 			Proveedor proveedor = proveedores.get(i);
-			double costo = calcularCostoTotal(producto, proveedor);
+			float costo = calcularCostoTotal(producto, proveedor);
 
 			if (costo < menorCosto) {
 				menorCosto = costo;

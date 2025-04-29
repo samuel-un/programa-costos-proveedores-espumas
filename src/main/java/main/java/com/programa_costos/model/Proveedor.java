@@ -2,11 +2,11 @@ package main.java.com.programa_costos.model;
 
 public class Proveedor {
     private String nombre;
-    private double precioUnitario;
+    private float precioUnitario;
     private String tipoEspuma; // NUEVO
 
     // Constructor actualizado con tipoEspuma
-    public Proveedor(String nombre, double precioUnitario, String tipoEspuma) {
+    public Proveedor(String nombre, float precioUnitario, String tipoEspuma) {
         this.nombre = nombre;
         this.precioUnitario = precioUnitario;
         this.tipoEspuma = tipoEspuma;
@@ -21,11 +21,11 @@ public class Proveedor {
         this.nombre = nombre;
     }
 
-    public double getPrecioUnitario() {
+    public float getPrecioUnitario() {
         return precioUnitario;
     }
 
-    public void setPrecioUnitario(double precioUnitario) {
+    public void setPrecioUnitario(float precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 

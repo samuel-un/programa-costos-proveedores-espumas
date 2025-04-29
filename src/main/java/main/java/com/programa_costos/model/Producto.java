@@ -1,43 +1,43 @@
 package main.java.com.programa_costos.model;
 
 public class Producto {
-	private double alto;
-	private double ancho;
-	private double largo;
+	private float alto;
+	private float ancho;
+	private float largo;
 	private String sistema; // "ciego", "pasante" o "mecanizado"
 	private String tipoEspuma; // "ecs", "poliuretano", etc.
 
 	// Constructor
-	public Producto(double alto, double ancho, double largo, String sistema, String tipoEspuma) {
-		this.alto = alto;
-		this.ancho = ancho;
-		this.largo = largo;
+	public Producto(float alto, float ancho, float largo, String sistema, String tipoEspuma) {
+		this.alto = alto / 100;
+		this.ancho = ancho / 100;
+		this.largo = largo / 100;
 		this.sistema = sistema;
 		this.tipoEspuma = tipoEspuma;
 	}
 
 	// Getters y Setters
-	public double getAlto() {
+	public float getAlto() {
 		return alto;
 	}
 
-	public void setAlto(double alto) {
+	public void setAlto(float alto) {
 		this.alto = alto;
 	}
 
-	public double getAncho() {
+	public float getAncho() {
 		return ancho;
 	}
 
-	public void setAncho(double ancho) {
+	public void setAncho(float ancho) {
 		this.ancho = ancho;
 	}
 
-	public double getLargo() {
+	public float getLargo() {
 		return largo;
 	}
 
-	public void setLargo(double largo) {
+	public void setLargo(float largo) {
 		this.largo = largo;
 	}
 
@@ -58,7 +58,7 @@ public class Producto {
 	}
 
 	// Método de conveniencia: retorna el volumen (por ejemplo, en cm3)
-	public double getVolumen() {
+	public float getVolumen() {
 		return alto * ancho * largo;
 	}
 

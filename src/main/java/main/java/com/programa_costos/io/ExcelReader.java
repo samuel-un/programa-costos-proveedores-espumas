@@ -90,9 +90,9 @@ public class ExcelReader {
                 String key = (rawName + "|" + tipoEspuma).toLowerCase().replaceAll("\\s+", " ");
 
                 // Parsear precio
-                double precio;
+                float precio;
                 try {
-                    precio = Double.parseDouble(cellPre.toString().trim());
+                    precio = Float.parseFloat(cellPre.toString().trim());
                 } catch (NumberFormatException e) {
                     continue; // valor inválido
                 }
