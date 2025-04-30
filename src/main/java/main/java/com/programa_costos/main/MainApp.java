@@ -18,7 +18,7 @@ public class MainApp {
 		}
 
 		// Producto con medidas
-		Producto producto = new Producto(8.4f, 6.4f, 0.8f, "FOAM PACK", "ciego");
+		Producto producto = new Producto(9f, 6.9f, 0.85f, "FOAM PACK", "ciego");
 
 		// Servicio de proveedores
 		ProveedorService proveedorService = new ProveedorService(excelPath);
