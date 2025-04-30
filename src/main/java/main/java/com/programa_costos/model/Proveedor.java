@@ -1,5 +1,8 @@
 package main.java.com.programa_costos.model;
 
+/**
+ * Representa un proveedor de espuma con sus características y medidas.
+ */
 public class Proveedor {
 	private String nombre;
 	private float precioUnitario;
@@ -8,7 +11,9 @@ public class Proveedor {
 	private float ancho;
 	private float grueso;
 
-	// Constructor
+	/**
+	 * Constructor completo.
+	 */
 	public Proveedor(String nombre, float precioUnitario, String tipoEspuma, float largo, float ancho, float grueso) {
 		this.nombre = nombre;
 		this.precioUnitario = precioUnitario;
@@ -43,7 +48,7 @@ public class Proveedor {
 		return grueso;
 	}
 
-	// Setters (si es necesario)
+	// Setters (si fueran necesarios)
 	public void setLargo(float largo) {
 		this.largo = largo;
 	}

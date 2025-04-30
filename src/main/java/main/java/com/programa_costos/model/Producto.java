@@ -1,5 +1,8 @@
 package main.java.com.programa_costos.model;
 
+/**
+ * Representa un producto con sus dimensiones y tipo de espuma.
+ */
 public class Producto {
 	private float largo;
 	private float ancho;
@@ -7,7 +10,6 @@ public class Producto {
 	private String tipoEspuma;
 	private String denominacion;
 
-	// Constructor
 	public Producto(float largo, float ancho, float grueso, String tipoEspuma, String denominacion) {
 		this.largo = largo;
 		this.ancho = ancho;
@@ -16,7 +18,6 @@ public class Producto {
 		this.denominacion = denominacion;
 	}
 
-	// Métodos getters
 	public float getLargo() {
 		return largo;
 	}
@@ -37,9 +38,10 @@ public class Producto {
 		return denominacion;
 	}
 
-	// Método para calcular el volumen del producto
+	/**
+	 * Calcula el volumen del producto.
+	 */
 	public float getVolumen() {
-		// Volumen = largo * ancho * grueso
 		return largo * ancho * grueso;
 	}
 

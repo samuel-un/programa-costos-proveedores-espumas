@@ -21,20 +21,16 @@ public class CostCalculator {
 		if (proveedores == null || proveedores.isEmpty()) {
 			throw new IllegalArgumentException("La lista de proveedores no puede estar vacía.");
 		}
-
 		Proveedor mejorProveedor = proveedores.get(0);
 		float menorPrecio = mejorProveedor.getPrecioUnitario();
-
 		for (int i = 1; i < proveedores.size(); i++) {
 			Proveedor proveedor = proveedores.get(i);
 			float precio = proveedor.getPrecioUnitario();
-
 			if (precio < menorPrecio) {
 				menorPrecio = precio;
 				mejorProveedor = proveedor;
 			}
 		}
-
 		return mejorProveedor;
 	}
 }
