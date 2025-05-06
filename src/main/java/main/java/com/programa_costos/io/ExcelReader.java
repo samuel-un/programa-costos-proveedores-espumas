@@ -111,7 +111,7 @@ public class ExcelReader {
 			throw new RuntimeException("Error leyendo el archivo Excel: " + e.getMessage(), e);
 		}
 		List<Proveedor> resultado = new ArrayList<>(proveedorMap.values());
-		logger.info("Total de proveedores encontrados: " + resultado.size());
+		logger.info("Total de proveedores encontrados: " + resultado.size() + "\n");
 		return resultado;
 	}
 

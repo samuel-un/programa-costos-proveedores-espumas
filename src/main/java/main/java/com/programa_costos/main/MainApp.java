@@ -19,17 +19,17 @@ public class MainApp {
 
 		try {
 			// Producto con medidas
-			Producto producto = new Producto(5.4f, 3f, 2.5f, "POLIURETANO", "ciego");
+			Producto producto = new Producto(16.2f, 3.5f, 6.6f, "POLIURETANO", "ciego");
 			// Servicio de proveedores
 			ProveedorService proveedorService = new ProveedorService(excelPath);
 
 			// Imprimir todos los proveedores para depuración
-			imprimirProveedoresDisponibles(proveedorService);
+			// imprimirProveedoresDisponibles(proveedorService);
 
 			// 1. Buscar proveedores que coincidan exactamente en tipo y medidas
 			System.out.println("Buscando proveedores para tipo de espuma: '" + producto.getTipoEspuma() +
 					"' con medidas exactas: " + producto.getLargo() + " x " + producto.getAncho() + " x "
-					+ producto.getGrueso());
+					+ producto.getGrueso() + "\n");
 			List<Proveedor> proveedoresExactos = proveedorService.getProveedoresPorTipoEspumaYMedidas(
 					producto.getTipoEspuma(), producto);
 
@@ -85,20 +85,24 @@ public class MainApp {
 
 	private static void mostrarProveedores(List<Proveedor> proveedores, Producto producto) {
 		for (Proveedor proveedor : proveedores) {
-			float costo = CostCalculator.calcularCostoTotal(producto, proveedor);
-			System.out.printf(" - %s (Tipo: '%s', Medidas: %.2f x %.2f x %.2f, PU: %.6f): Costo total = %.6f%n",
+			float volumen = producto.getVolumen(); // Volumen en metros cúbicos
+			System.out.printf(" - %s (Tipo: %s, Medidas: %.2f x %.2f x %.2f, Precio: %s Eur, Volumen: %s m³)%n",
 					proveedor.getNombre(), proveedor.getTipoEspuma(),
 					proveedor.getLargo(), proveedor.getAncho(), proveedor.getGrueso(),
-					proveedor.getPrecioUnitario(), costo);
+					formatearNumero(proveedor.getPrecioUnitario()), formatearNumero(volumen));
 		}
 	}
 
 	private static void mostrarMejorProveedor(List<Proveedor> proveedores, Producto producto) {
 		Proveedor mejor = CostCalculator.encontrarProveedorMasEconomico(proveedores);
-		System.out.println("\nProveedor más económico:");
-		System.out.printf(" - %s (PU: %.6f): Costo total = %.6f%n",
-				mejor.getNombre(), mejor.getPrecioUnitario(),
-				CostCalculator.calcularCostoTotal(producto, mejor));
+		System.out.println("\nProveedor más económico de los encontrados:");
+		System.out.printf("- %s (Tipo: %s, Medidas: %.2f x %.2f x %.2f):%n",
+				mejor.getNombre(), mejor.getTipoEspuma(),
+				mejor.getLargo(), mejor.getAncho(), mejor.getGrueso());
+		System.out.printf("  Precio: %s Eur%n",
+				formatearNumero(mejor.getPrecioUnitario()));
+		System.out.printf("  giVolumen: %s m³%n",
+				formatearNumero(producto.getVolumen()));
 	}
 
 	private static void imprimirProveedoresDisponibles(ProveedorService service) {
@@ -108,5 +112,19 @@ public class MainApp {
 					p.getNombre(), p.getTipoEspuma(), p.getLargo(), p.getAncho(), p.getGrueso());
 		}
 		System.out.println("");
+	}
+
+	// Método auxiliar para formatear números eliminando ceros a la derecha
+	private static String formatearNumero(float numero) {
+		// Convertir a String con suficientes decimales
+		String numeroStr = String.format("%.6f", numero);
+		// Eliminar ceros a la derecha
+		numeroStr = numeroStr.replaceAll("0+$", "");
+		// Eliminar el punto decimal si es el último carácter
+		if (numeroStr.endsWith(".")) {
+			numeroStr = numeroStr.substring(0, numeroStr.length() - 1);
+		}
+		// Reemplazar punto por coma para formato español
+		return numeroStr.replace(".", ",");
 	}
 }
