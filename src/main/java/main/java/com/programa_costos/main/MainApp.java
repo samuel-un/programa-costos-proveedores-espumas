@@ -101,7 +101,7 @@ public class MainApp {
 				mejor.getLargo(), mejor.getAncho(), mejor.getGrueso());
 		System.out.printf("  Precio: %s Eur%n",
 				formatearNumero(mejor.getPrecioUnitario()));
-		System.out.printf("  giVolumen: %s m³%n",
+		System.out.printf("  Volumen: %s m³%n",
 				formatearNumero(producto.getVolumen()));
 	}
 

@@ -42,7 +42,8 @@ public class Producto {
 	 * Calcula el volumen del producto.
 	 */
 	public float getVolumen() {
-		return largo * ancho * grueso;
+		// Convertir cm³ a m³ (1 m³ = 1,000,000 cm³)
+		return (largo * ancho * grueso) / 1_000_000f;
 	}
 
 	@Override
