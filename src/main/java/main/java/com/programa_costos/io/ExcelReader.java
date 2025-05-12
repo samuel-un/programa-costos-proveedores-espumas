@@ -3,6 +3,7 @@ package main.java.com.programa_costos.io;
 import main.java.com.programa_costos.model.Proveedor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
@@ -13,11 +14,12 @@ import java.util.logging.Logger;
  * proveedor/tipo/medidas.
  */
 public class ExcelReader {
+
 	private static final Logger logger = Logger.getLogger(ExcelReader.class.getName());
 
 	/**
 	 * Lee proveedores desde un recurso Excel.
-	 * 
+	 *
 	 * @param resourcePath Ruta del recurso Excel.
 	 * @return Lista de proveedores únicos con su precio mínimo.
 	 * @throws IllegalArgumentException si el archivo no se encuentra o faltan
@@ -35,7 +37,6 @@ public class ExcelReader {
 				int headerRowIdx = buscarFilaEncabezado(sheet);
 				if (headerRowIdx < 0)
 					throw new IllegalStateException("No se encontró la fila de encabezado con 'Prov.' o 'Proveedor'.");
-
 				Row header = sheet.getRow(headerRowIdx);
 				Map<String, Integer> idxMap = mapearEncabezados(header);
 				validarColumnasNecesarias(idxMap);
@@ -46,6 +47,7 @@ public class ExcelReader {
 				int colLargo = idxMap.get("LARGO");
 				int colAncho = idxMap.get("ANCHO");
 				int colGrueso = idxMap.get("GRUESO");
+				int colUnidades = idxMap.containsKey("UNIDADES") ? idxMap.get("UNIDADES") : -1;
 
 				int totalFilas = sheet.getLastRowNum();
 				int filasProcesadas = 0, filasValidas = 0, filasIgnoradas = 0;
@@ -57,6 +59,7 @@ public class ExcelReader {
 						filasIgnoradas++;
 						continue;
 					}
+
 					try {
 						Cell cellProv = row.getCell(colProv);
 						Cell cellPre = row.getCell(colPrecio);
@@ -64,6 +67,7 @@ public class ExcelReader {
 						Cell cellLargo = row.getCell(colLargo);
 						Cell cellAncho = row.getCell(colAncho);
 						Cell cellGrueso = row.getCell(colGrueso);
+						Cell cellUnidades = (colUnidades != -1) ? row.getCell(colUnidades) : null;
 
 						if (cellProv == null || cellTipo == null) {
 							filasIgnoradas++;
@@ -86,23 +90,27 @@ public class ExcelReader {
 						float largo = (cellLargo != null) ? obtenerValorCelda(cellLargo) : 0;
 						float ancho = (cellAncho != null) ? obtenerValorCelda(cellAncho) : 0;
 						float grueso = (cellGrueso != null) ? obtenerValorCelda(cellGrueso) : 0;
+						String unidades = (cellUnidades != null) ? getCellValueAsString(cellUnidades) : "";
 
 						// Clave única: nombre|tipo|largo|ancho|grueso (normalizada)
 						String key = (rawName + "|" + tipoEspuma + "|" + largo + "|" + ancho + "|" + grueso)
 								.toLowerCase().replaceAll("\\s+", " ");
 
-						Proveedor nuevoProveedor = new Proveedor(rawName, precio, tipoEspuma, largo, ancho, grueso);
+						Proveedor nuevoProveedor = new Proveedor(rawName, precio, tipoEspuma, largo, ancho, grueso,
+								unidades);
 
 						// Consolidar por precio mínimo
 						if (!proveedorMap.containsKey(key) || proveedorMap.get(key).getPrecioUnitario() > precio) {
 							proveedorMap.put(key, nuevoProveedor);
 						}
+
 						filasValidas++;
 					} catch (Exception e) {
 						logger.warning("Error procesando fila " + i + ": " + e.getMessage());
 						filasIgnoradas++;
 					}
 				}
+
 				logger.info(String.format(
 						"Excel procesado: %d filas totales, %d válidas, %d ignoradas, %d proveedores únicos",
 						totalFilas, filasValidas, filasIgnoradas, proveedorMap.size()));
@@ -110,6 +118,7 @@ public class ExcelReader {
 		} catch (IOException e) {
 			throw new RuntimeException("Error leyendo el archivo Excel: " + e.getMessage(), e);
 		}
+
 		List<Proveedor> resultado = new ArrayList<>(proveedorMap.values());
 		logger.info("Total de proveedores encontrados: " + resultado.size() + "\n");
 		return resultado;
@@ -174,6 +183,7 @@ public class ExcelReader {
 			throw new IllegalStateException(
 					"Faltan columnas necesarias en el encabezado: " + String.join(", ", columnasFaltantes));
 		}
+		// "UNIDADES" es opcional
 	}
 
 	private static String getCellValueAsString(Cell cell) {

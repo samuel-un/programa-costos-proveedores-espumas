@@ -86,10 +86,13 @@ public class MainApp {
 	private static void mostrarProveedores(List<Proveedor> proveedores, Producto producto) {
 		for (Proveedor proveedor : proveedores) {
 			float volumen = producto.getVolumen(); // Volumen en metros cúbicos
-			System.out.printf(" - %s (Tipo: %s, Medidas: %.2f x %.2f x %.2f, Precio: %s Eur, Volumen: %s m³)%n",
+			System.out.printf(
+					" - %s (Tipo: %s, Medidas: %.2f x %.2f x %.2f, Precio: %s Eur, Volumen: %s m³, Unidades: %s)%n",
 					proveedor.getNombre(), proveedor.getTipoEspuma(),
 					proveedor.getLargo(), proveedor.getAncho(), proveedor.getGrueso(),
-					formatearNumero(proveedor.getPrecioUnitario()), formatearNumero(volumen));
+					formatearNumero(proveedor.getPrecioUnitario()), formatearNumero(volumen),
+					proveedor.getUnidades() != null && !proveedor.getUnidades().isEmpty() ? proveedor.getUnidades()
+							: "(No especificado)");
 		}
 	}
 
@@ -99,10 +102,11 @@ public class MainApp {
 		System.out.printf("- %s (Tipo: %s, Medidas: %.2f x %.2f x %.2f):%n",
 				mejor.getNombre(), mejor.getTipoEspuma(),
 				mejor.getLargo(), mejor.getAncho(), mejor.getGrueso());
-		System.out.printf("  Precio: %s Eur%n",
-				formatearNumero(mejor.getPrecioUnitario()));
-		System.out.printf("  Volumen: %s m³%n",
-				formatearNumero(producto.getVolumen()));
+		System.out.printf("  Precio: %s Eur%n", formatearNumero(mejor.getPrecioUnitario()));
+		System.out.printf("  Volumen: %s m³%n", formatearNumero(producto.getVolumen()));
+		System.out.printf("  Unidades: %s%n",
+				mejor.getUnidades() != null && !mejor.getUnidades().isEmpty() ? mejor.getUnidades()
+						: "(No especificado)");
 	}
 
 	private static void imprimirProveedoresDisponibles(ProveedorService service) {
